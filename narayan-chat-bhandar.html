@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Narayan Chat Bhandar — Jhansi's Finest Chaat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saffron: #E8751A;
+    --saffron-deep: #C4531A;
+    --saffron-light: #F4A460;
+    --saffron-glow: #FF9B3A;
+    --cream: #FDF6E3;
+    --cream-dark: #F5E8C7;
+    --brown-dark: #1A0A00;
+    --brown-mid: #3D1C00;
+    --brown-rich: #5C2D00;
+    --gold: #D4A017;
+    --gold-light: #F2D060;
+    --text-light: #FFF8F0;
+    --text-muted: #C4956A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--brown-dark);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--saffron);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.15s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-trail {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--saffron-light);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transition: transform 0.4s ease, opacity 0.3s;
+    opacity: 0.5;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    padding: 24px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(26,10,0,0.95), transparent);
+    backdrop-filter: blur(4px);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-weight: 700;
+    color: var(--saffron-light);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--gold-light); font-style: italic; }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-muted); text-decoration: none;
+    transition: color 0.3s;
+    font-weight: 500;
+  }
+  .nav-links a:hover { color: var(--saffron-light); }
+
+  /* HERO */
+  .hero {
+    height: 100vh; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(232,117,26,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 75% 70%, rgba(212,160,23,0.12) 0%, transparent 60%),
+      linear-gradient(160deg, #1A0A00 0%, #2C1200 40%, #1A0A00 100%);
+  }
+  .hero-pattern {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23F4A460' fill-opacity='1'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30 Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  /* Floating spice particles */
+  .spice-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: floatUp linear infinite;
+    opacity: 0;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(-20vh) rotate(720deg); opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center; padding: 0 20px;
+    max-width: 900px;
+  }
+  .hero-badge {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold-light);
+    border: 1px solid rgba(212,160,23,0.4);
+    padding: 8px 22px; border-radius: 2px;
+    margin-bottom: 32px;
+    animation: fadeInDown 1s ease both;
+    background: rgba(212,160,23,0.06);
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 0.95;
+    color: var(--cream);
+    animation: fadeInUp 1.1s 0.2s ease both;
+    letter-spacing: -0.01em;
+  }
+  .hero-title .accent { color: var(--saffron-glow); font-style: italic; }
+  .hero-title .line2 {
+    display: block;
+    -webkit-text-stroke: 1px var(--saffron-light);
+    color: transparent;
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+  }
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-style: italic;
+    color: var(--text-muted);
+    margin: 24px 0 48px;
+    animation: fadeInUp 1.1s 0.4s ease both;
+    letter-spacing: 0.03em;
+  }
+  .hero-ctas {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    animation: fadeInUp 1.1s 0.6s ease both;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--saffron) 0%, var(--saffron-deep) 100%);
+    color: #fff;
+    padding: 16px 40px; border: none; border-radius: 3px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer; font-weight: 500;
+    box-shadow: 0 8px 32px rgba(232,117,26,0.4);
+    transition: all 0.3s ease;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(232,117,26,0.6); }
+  .btn-outline {
+    background: transparent;
+    color: var(--cream);
+    padding: 15px 40px; border: 1px solid rgba(253,246,227,0.3); border-radius: 3px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer; font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--saffron-light); color: var(--saffron-light); }
+
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    animation: fadeInUp 1.5s 1s ease both;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--saffron), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+  .hero-food-img {
+    position: absolute; right: -60px; bottom: 0; width: 55vw; max-width: 750px;
+    opacity: 0.18;
+    filter: sepia(30%) saturate(150%);
+    animation: fadeInRight 1.5s 0.5s ease both;
+    pointer-events: none;
+  }
+
+  /* Decorative horizontal line */
+  .section-divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(to right, transparent, rgba(232,117,26,0.3), rgba(212,160,23,0.4), rgba(232,117,26,0.3), transparent);
+  }
+
+  /* STATS */
+  .stats-section {
+    padding: 100px 60px;
+    position: relative;
+    background: linear-gradient(to bottom, var(--brown-dark), var(--brown-mid));
+  }
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .stat-card {
+    text-align: center; padding: 60px 30px;
+    position: relative;
+    border: 1px solid rgba(232,117,26,0.12);
+    background: rgba(232,117,26,0.03);
+    transition: all 0.4s ease;
+  }
+  .stat-card:hover {
+    background: rgba(232,117,26,0.08);
+    transform: translateY(-4px);
+  }
+  .stat-icon {
+    font-size: 2rem; margin-bottom: 16px;
+    display: block;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: 900; color: var(--saffron-glow);
+    line-height: 1;
+    display: block;
+  }
+  .stat-plus { color: var(--gold); }
+  .stat-label {
+    margin-top: 12px; font-size: 0.8rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted);
+    font-weight: 500;
+  }
+  .stats-title {
+    text-align: center; margin-bottom: 70px;
+  }
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--saffron); font-weight: 500; margin-bottom: 16px;
+    display: block;
+  }
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 700;
+    color: var(--cream); line-height: 1.15;
+  }
+  .section-heading em { font-style: italic; color: var(--saffron-light); }
+
+  /* STORY SECTION */
+  .story-section {
+    padding: 120px 60px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+    max-width: 1200px; margin: 0 auto;
+    position: relative;
+  }
+  .story-visual {
+    position: relative;
+  }
+  .story-img-frame {
+    width: 100%; padding-top: 120%;
+    background: linear-gradient(145deg, var(--brown-rich) 0%, #2A1000 100%);
+    border-radius: 4px;
+    overflow: hidden; position: relative;
+    border: 1px solid rgba(232,117,26,0.2);
+  }
+  .story-img-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 20px; padding: 40px;
+  }
+  .story-emoji-art {
+    font-size: 5rem; line-height: 1;
+    filter: drop-shadow(0 0 30px rgba(232,117,26,0.5));
+    animation: gentleFloat 4s ease-in-out infinite;
+  }
+  @keyframes gentleFloat {
+    0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-12px) rotate(2deg)}
+  }
+  .story-year-badge {
+    position: absolute; top: -20px; right: -20px;
+    width: 100px; height: 100px;
+    background: linear-gradient(135deg, var(--saffron), var(--gold));
+    border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    box-shadow: 0 12px 40px rgba(232,117,26,0.4);
+  }
+  .story-year-badge .year { font-size: 1.4rem; font-weight: 900; color: var(--brown-dark); }
+  .story-year-badge .est { font-size: 0.55rem; letter-spacing: 0.15em; color: var(--brown-mid); text-transform: uppercase; }
+  .story-accent-line {
+    position: absolute; left: -30px; bottom: 80px;
+    width: 3px; height: 120px;
+    background: linear-gradient(to bottom, var(--saffron), transparent);
+  }
+
+  .story-text .section-label { margin-bottom: 12px; }
+  .story-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 700;
+    line-height: 1.2; color: var(--cream);
+    margin-bottom: 28px;
+  }
+  .story-text h2 em { font-style: italic; color: var(--saffron-light); }
+  .story-text p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem; line-height: 1.85;
+    color: rgba(253,246,227,0.75);
+    margin-bottom: 20px;
+  }
+  .story-milestones {
+    margin-top: 40px; display: flex; flex-direction: column; gap: 16px;
+  }
+  .milestone {
+    display: flex; align-items: flex-start; gap: 20px;
+    padding: 16px 20px;
+    border-left: 2px solid rgba(232,117,26,0.3);
+    transition: border-color 0.3s;
+  }
+  .milestone:hover { border-color: var(--saffron); }
+  .milestone-year {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--saffron-glow); white-space: nowrap;
+  }
+  .milestone-text { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* MENU SECTION */
+  .menu-section {
+    padding: 120px 60px;
+    background: linear-gradient(to bottom, var(--brown-mid), #200E00);
+  }
+  .menu-header { text-align: center; margin-bottom: 70px; }
+  .menu-filter {
+    display: flex; gap: 8px; justify-content: center;
+    margin-top: 32px; flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 9px 22px; border-radius: 2px;
+    font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 500; cursor: pointer; transition: all 0.3s;
+    border: 1px solid rgba(232,117,26,0.3); background: transparent; color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--saffron); color: #fff; border-color: var(--saffron);
+  }
+  .menu-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; max-width: 1200px; margin: 0 auto;
+  }
+  .menu-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(232,117,26,0.12);
+    border-radius: 4px; overflow: hidden;
+    cursor: pointer; transition: all 0.4s ease;
+    position: relative;
+  }
+  .menu-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(232,117,26,0.4);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(232,117,26,0.2);
+  }
+  .menu-card-img {
+    height: 200px; position: relative;
+    background: linear-gradient(145deg, var(--brown-rich), #1A0800);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .menu-emoji {
+    font-size: 4.5rem;
+    transition: transform 0.4s ease;
+    filter: drop-shadow(0 4px 20px rgba(232,117,26,0.4));
+  }
+  .menu-card:hover .menu-emoji { transform: scale(1.2) rotate(-5deg); }
+  .menu-card-glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(232,117,26,0.15) 0%, transparent 70%);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .menu-card:hover .menu-card-glow { opacity: 1; }
+  .menu-badge {
+    position: absolute; top: 14px; right: 14px;
+    background: var(--saffron); color: #fff;
+    font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 2px; font-weight: 500;
+  }
+  .menu-card-body { padding: 24px; }
+  .menu-card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; font-weight: 700; color: var(--cream);
+    margin-bottom: 8px;
+  }
+  .menu-card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+  .menu-spice {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 16px;
+  }
+  .spice-label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+  .chili { font-size: 0.9rem; }
+  .chili.inactive { opacity: 0.2; }
+  .menu-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 16px; border-top: 1px solid rgba(232,117,26,0.12);
+  }
+  .menu-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700; color: var(--saffron-glow);
+  }
+  .menu-order-btn {
+    background: transparent; border: 1px solid rgba(232,117,26,0.4);
+    color: var(--saffron-light); padding: 8px 18px; border-radius: 2px;
+    font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+  }
+  .menu-order-btn:hover { background: var(--saffron); color: #fff; border-color: var(--saffron); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.35s;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+  .modal {
+    background: linear-gradient(145deg, #2C1200, #1A0A00);
+    border: 1px solid rgba(232,117,26,0.3);
+    border-radius: 6px; padding: 50px;
+    max-width: 560px; width: 90%;
+    transform: translateY(30px) scale(0.95);
+    transition: transform 0.35s ease;
+    position: relative;
+  }
+  .modal-overlay.active .modal { transform: translateY(0) scale(1); }
+  .modal-close {
+    position: absolute; top: 20px; right: 20px;
+    background: none; border: none; color: var(--text-muted);
+    font-size: 1.5rem; cursor: pointer; transition: color 0.3s;
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1;
+  }
+  .modal-close:hover { color: var(--saffron); }
+  .modal-emoji { font-size: 5rem; display: block; margin-bottom: 24px; text-align: center; }
+  .modal-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700; color: var(--cream);
+    text-align: center; margin-bottom: 12px;
+  }
+  .modal-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; line-height: 1.8; color: rgba(253,246,227,0.75);
+    text-align: center; margin-bottom: 28px;
+  }
+  .modal-spice {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; margin-bottom: 28px;
+  }
+  .spice-meter {
+    display: flex; gap: 6px;
+  }
+  .spice-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: rgba(232,117,26,0.2); border: 1px solid rgba(232,117,26,0.3);
+    transition: all 0.3s;
+  }
+  .spice-dot.lit { background: var(--saffron); border-color: var(--saffron-glow); box-shadow: 0 0 8px var(--saffron); }
+  .modal-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 900; color: var(--saffron-glow);
+    text-align: center; margin-bottom: 28px;
+  }
+  .modal-cta {
+    display: flex; gap: 12px; justify-content: center;
+  }
+
+  /* BUILD YOUR PLATE */
+  .build-section {
+    padding: 120px 60px;
+    background: linear-gradient(to bottom, #200E00, var(--brown-dark));
+    position: relative; overflow: hidden;
+  }
+  .build-section::before {
+    content: '';
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(232,117,26,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .build-header { text-align: center; margin-bottom: 70px; }
+  .build-container {
+    max-width: 900px; margin: 0 auto;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(232,117,26,0.15);
+    border-radius: 6px; padding: 60px;
+  }
+  .build-step {
+    margin-bottom: 50px;
+  }
+  .build-step:last-of-type { margin-bottom: 0; }
+  .build-step-label {
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--saffron); font-weight: 500; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .build-step-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, rgba(232,117,26,0.3), transparent);
+  }
+  .build-options {
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .build-option {
+    padding: 12px 22px; border-radius: 3px;
+    border: 1px solid rgba(232,117,26,0.25);
+    color: var(--text-muted); background: transparent;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    cursor: pointer; transition: all 0.3s; font-weight: 400;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .build-option:hover { border-color: var(--saffron-light); color: var(--saffron-light); }
+  .build-option.selected {
+    background: rgba(232,117,26,0.12); border-color: var(--saffron);
+    color: var(--saffron-light);
+    box-shadow: 0 4px 20px rgba(232,117,26,0.2);
+  }
+  .spice-slider-container { margin-top: 16px; }
+  .spice-slider {
+    -webkit-appearance: none; width: 100%; height: 4px;
+    background: linear-gradient(to right, #2C1200, var(--saffron) 60%, #ff3500);
+    border-radius: 4px; cursor: pointer; margin-bottom: 10px;
+  }
+  .spice-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--saffron-glow); border: 2px solid var(--cream);
+    box-shadow: 0 2px 10px rgba(232,117,26,0.5);
+    cursor: pointer;
+  }
+  .spice-display {
+    font-size: 0.8rem; color: var(--text-muted); text-align: right;
+    letter-spacing: 0.08em;
+  }
+  .plate-preview {
+    margin-top: 50px; padding-top: 40px;
+    border-top: 1px solid rgba(232,117,26,0.15);
+    text-align: center;
+  }
+  .plate-preview-label {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--saffron); margin-bottom: 24px; display: block;
+  }
+  .plate-display {
+    background: linear-gradient(145deg, var(--brown-rich), #1A0800);
+    border: 1px solid rgba(232,117,26,0.2);
+    border-radius: 100px; padding: 24px 40px;
+    display: inline-flex; align-items: center; gap: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem; color: var(--cream);
+    margin-bottom: 28px;
+    min-width: 320px; justify-content: center;
+    transition: all 0.4s ease;
+  }
+  .plate-icon { font-size: 2rem; }
+
+  /* REVIEWS */
+  .reviews-section {
+    padding: 120px 60px;
+    background: linear-gradient(to bottom, var(--brown-dark), var(--brown-mid));
+  }
+  .reviews-header { text-align: center; margin-bottom: 70px; }
+  .reviews-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; max-width: 1200px; margin: 0 auto;
+  }
+  .review-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(232,117,26,0.1);
+    border-radius: 4px; padding: 36px;
+    transition: all 0.4s ease; position: relative;
+    overflow: hidden;
+  }
+  .review-card::before {
+    content: '"';
+    position: absolute; top: 20px; right: 24px;
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem; font-weight: 900;
+    color: rgba(232,117,26,0.08); line-height: 1;
+    pointer-events: none;
+  }
+  .review-card:hover {
+    border-color: rgba(232,117,26,0.3);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+  .review-stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 18px; letter-spacing: 2px; }
+  .review-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem; line-height: 1.8;
+    color: rgba(253,246,227,0.8); margin-bottom: 24px;
+  }
+  .reviewer {
+    display: flex; align-items: center; gap: 14px;
+    padding-top: 20px; border-top: 1px solid rgba(232,117,26,0.1);
+  }
+  .reviewer-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--saffron), var(--brown-rich));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; font-weight: 700; color: #fff;
+    flex-shrink: 0;
+  }
+  .reviewer-name {
+    font-weight: 500; font-size: 0.9rem; color: var(--cream);
+    display: block;
+  }
+  .reviewer-meta {
+    font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;
+    display: block;
+  }
+  .google-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 4px 10px; border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 2px; margin-bottom: 8px;
+  }
+  .google-dot { width: 8px; height: 8px; background: #4285F4; border-radius: 50%; }
+
+  /* FOOTER */
+  footer {
+    padding: 80px 60px 40px;
+    background: #0D0500;
+    border-top: 1px solid rgba(232,117,26,0.1);
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 60px; margin-bottom: 60px;
+  }
+  .footer-brand .nav-logo { display: block; margin-bottom: 20px; font-size: 1.6rem; }
+  .footer-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; font-style: italic;
+    color: var(--text-muted); line-height: 1.7; margin-bottom: 24px;
+  }
+  .footer-social {
+    display: flex; gap: 12px;
+  }
+  .social-btn {
+    width: 40px; height: 40px; border-radius: 3px;
+    border: 1px solid rgba(232,117,26,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; color: var(--text-muted); text-decoration: none;
+    transition: all 0.3s;
+  }
+  .social-btn:hover { border-color: var(--saffron); color: var(--saffron); }
+  .footer-col h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem; font-weight: 700;
+    color: var(--cream); margin-bottom: 22px;
+    letter-spacing: 0.05em;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 12px; }
+  .footer-col ul li a {
+    font-size: 0.83rem; color: var(--text-muted);
+    text-decoration: none; transition: color 0.3s;
+  }
+  .footer-col ul li a:hover { color: var(--saffron-light); }
+  .footer-bottom {
+    padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-copy { font-size: 0.78rem; color: rgba(196,149,106,0.5); }
+  .footer-heart { color: var(--saffron); }
+
+  /* WHATSAPP FLOAT */
+  .whatsapp-float {
+    position: fixed; bottom: 36px; right: 36px; z-index: 100;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+  }
+  .whatsapp-tooltip {
+    background: var(--cream);
+    color: var(--brown-dark);
+    font-size: 0.78rem; font-weight: 500;
+    padding: 8px 16px; border-radius: 3px;
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    opacity: 0; transform: translateX(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+  .whatsapp-float:hover .whatsapp-tooltip { opacity: 1; transform: translateX(0); }
+  .whatsapp-btn {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; text-decoration: none;
+    box-shadow: 0 8px 30px rgba(37,211,102,0.4);
+    transition: all 0.3s ease;
+    animation: waPulse 3s ease infinite;
+  }
+  .whatsapp-btn:hover { transform: scale(1.1); box-shadow: 0 12px 40px rgba(37,211,102,0.6); }
+  @keyframes waPulse {
+    0%,100%{box-shadow:0 8px 30px rgba(37,211,102,0.4)}
+    50%{box-shadow:0 8px 40px rgba(37,211,102,0.7), 0 0 0 10px rgba(37,211,102,0.08)}
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeInDown {
+    from { opacity:0; transform:translateY(-20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeInUp {
+    from { opacity:0; transform:translateY(30px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeInRight {
+    from { opacity:0; transform:translateX(60px); }
+    to { opacity:0.18; transform:translateX(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ORNAMENT */
+  .ornament {
+    display: flex; align-items: center; gap: 16px;
+    justify-content: center; margin-bottom: 16px;
+  }
+  .ornament-line {
+    height: 1px; width: 60px;
+    background: linear-gradient(to right, transparent, rgba(212,160,23,0.5));
+  }
+  .ornament-line.r { background: linear-gradient(to left, transparent, rgba(212,160,23,0.5)); }
+  .ornament-diamond {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  /* responsive tweaks */
+  @media (max-width: 960px) {
+    nav { padding: 20px 30px; }
+    .hero-title { font-size: 3.5rem; }
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .story-section { grid-template-columns: 1fr; gap: 50px; padding: 80px 30px; }
+    .story-visual { display: none; }
+    .menu-grid { grid-template-columns: repeat(2,1fr); }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .stats-section, .menu-section, .build-section, .reviews-section { padding: 80px 30px; }
+  }
+  @media (max-width: 600px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .hero-title { font-size: 2.6rem; }
+    .menu-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .build-container { padding: 30px 20px; }
+    .footer-top { grid-template-columns: 1fr; gap: 30px; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Narayan <span>Chat</span></a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#story">Our Story</a></li>
+    <li><a href="#build">Build Plate</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+
+  <!-- Spice particles -->
+  <div id="particles-container"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">✦ Jhansi's Most Beloved Street Food ✦</div>
+    <h1 class="hero-title">
+      <span class="accent">Narayan</span><br>
+      Chat Bhandar<br>
+      <span class="line2">Jhansi's Finest</span>
+    </h1>
+    <p class="hero-sub">"From a humble cart to Jhansi's most loved chaat destination — crafted with love, spice &amp; tradition."</p>
+    <div class="hero-ctas">
+      <a href="#menu" class="btn-primary">Explore Our Menu</a>
+      <a href="#build" class="btn-outline">Build Your Plate</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stats-title">
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond"></div>
+      <div class="ornament-line r"></div>
+    </div>
+    <span class="section-label">The Numbers Speak</span>
+    <h2 class="section-heading">Trusted by <em>Thousands</em></h2>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card reveal">
+      <span class="stat-icon">🍽️</span>
+      <span class="stat-num" data-target="10000">0</span>
+      <span class="stat-plus" style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold)">+</span>
+      <p class="stat-label">Plates Served</p>
+    </div>
+    <div class="stat-card reveal reveal-delay-1">
+      <span class="stat-icon">😊</span>
+      <span class="stat-num" data-target="500">0</span>
+      <span class="stat-plus" style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold)">+</span>
+      <p class="stat-label">Happy Customers Daily</p>
+    </div>
+    <div class="stat-card reveal reveal-delay-2">
+      <span class="stat-icon">🌶️</span>
+      <span class="stat-num" data-target="25">0</span>
+      <span class="stat-plus" style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold)">+</span>
+      <p class="stat-label">Signature Recipes</p>
+    </div>
+    <div class="stat-card reveal reveal-delay-3">
+      <span class="stat-icon">⭐</span>
+      <span class="stat-num" data-target="4" data-decimal="true">0</span>
+      <span style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold)">.9</span>
+      <p class="stat-label">Google Rating</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- STORY -->
+<section id="story" style="background: linear-gradient(to bottom, var(--brown-mid), #200E00); padding: 0;">
+  <div class="story-section">
+    <div class="story-visual reveal">
+      <div class="story-img-frame">
+        <div class="story-img-inner">
+          <span class="story-emoji-art">🥘</span>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--text-muted);text-align:center;line-height:1.7">
+            "Every plate carries decades<br>of flavour and memory"
+          </p>
+          <div style="width:60px;height:2px;background:linear-gradient(to right,var(--saffron),var(--gold));margin-top:12px"></div>
+        </div>
+      </div>
+      <div class="story-year-badge">
+        <span class="year">1985</span>
+        <span class="est">Est.</span>
+      </div>
+      <div class="story-accent-line"></div>
+    </div>
+    <div class="story-text">
+      <div class="ornament" style="justify-content:flex-start">
+        <div class="ornament-line"></div>
+        <div class="ornament-diamond"></div>
+      </div>
+      <span class="section-label">Our Heritage</span>
+      <h2>From a <em>Street Cart</em><br>to Jhansi's Heart</h2>
+      <p>It started with a single cart, one iron tawa, and an old family recipe passed down through generations. Narayan ji set up his humble chaat stall on the bustling lanes of Jhansi — and the aroma alone stopped people in their tracks.</p>
+      <p>Today, decades later, that same soul still simmers in every bowl of papdi chaat, every crispy moong dal chilla, every tangy golgappa we serve. We haven't just made food — we've made memories for families across Jhansi.</p>
+      <div class="story-milestones">
+        <div class="milestone reveal">
+          <span class="milestone-year">1985</span>
+          <p class="milestone-text">Narayan ji starts with a small street cart near Jhansi's old market</p>
+        </div>
+        <div class="milestone reveal reveal-delay-1">
+          <span class="milestone-year">1998</span>
+          <p class="milestone-text">First permanent stall established — queues stretch around the corner</p>
+        </div>
+        <div class="milestone reveal reveal-delay-2">
+          <span class="milestone-year">2012</span>
+          <p class="milestone-text">Expanded with a full menu, second-generation recipes introduced</p>
+        </div>
+        <div class="milestone reveal reveal-delay-3">
+          <span class="milestone-year">Today</span>
+          <p class="milestone-text">Serving 500+ customers daily — Jhansi's most loved chaat destination</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- MENU -->
+<section id="menu" class="menu-section">
+  <div class="menu-header">
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond"></div>
+      <div class="ornament-line r"></div>
+    </div>
+    <span class="section-label">Curated Flavours</span>
+    <h2 class="section-heading">The <em>Sacred Menu</em></h2>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--text-muted);margin-top:14px">Click on any item to explore its story</p>
+    <div class="menu-filter">
+      <button class="filter-btn active" data-filter="all">All Items</button>
+      <button class="filter-btn" data-filter="chaat">Chaat</button>
+      <button class="filter-btn" data-filter="chilla">Chilla</button>
+      <button class="filter-btn" data-filter="special">Specials</button>
+    </div>
+  </div>
+  <div class="menu-grid" id="menuGrid">
+    <!-- Cards injected by JS -->
+  </div>
+</section>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="menuModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <span class="modal-emoji" id="modalEmoji"></span>
+    <h3 class="modal-name" id="modalName"></h3>
+    <p class="modal-desc" id="modalDesc"></p>
+    <div class="modal-spice">
+      <span style="font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted)">Spice Level:</span>
+      <div class="spice-meter" id="modalSpice"></div>
+    </div>
+    <div class="modal-price" id="modalPrice"></div>
+    <div class="modal-cta">
+      <a href="#" class="btn-primary" id="modalWA" style="font-size:0.8rem;padding:14px 30px">Order on WhatsApp</a>
+      <button class="btn-outline" id="modalBuild" style="font-size:0.8rem;padding:14px 30px">Add to Plate</button>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- BUILD YOUR PLATE -->
+<section id="build" class="build-section">
+  <div class="build-header reveal">
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond"></div>
+      <div class="ornament-line r"></div>
+    </div>
+    <span class="section-label">Interactive Experience</span>
+    <h2 class="section-heading">Build Your <em>Perfect Plate</em></h2>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--text-muted);margin-top:14px">Customise every bite exactly how you like it</p>
+  </div>
+  <div class="build-container reveal">
+    <div class="build-step">
+      <p class="build-step-label">Step 01 — Choose Your Base</p>
+      <div class="build-options" id="baseOptions">
+        <button class="build-option" data-val="Papdi Chaat">🥗 Papdi Chaat</button>
+        <button class="build-option" data-val="Moong Dal Chilla">🫓 Moong Dal Chilla</button>
+        <button class="build-option" data-val="Dahi Vada">🥣 Dahi Vada</button>
+        <button class="build-option" data-val="Aloo Tikki">🥔 Aloo Tikki</button>
+        <button class="build-option" data-val="Golgappa">🫧 Golgappa</button>
+      </div>
+    </div>
+    <div class="build-step">
+      <p class="build-step-label">Step 02 — Select Your Chutney</p>
+      <div class="build-options" id="chutneyOptions">
+        <button class="build-option" data-val="Imli Ki Chutney">🟤 Imli (Tamarind)</button>
+        <button class="build-option" data-val="Hari Chutney">💚 Hari (Mint-Coriander)</button>
+        <button class="build-option" data-val="Dahi">🤍 Dahi (Yogurt)</button>
+        <button class="build-option" data-val="All Three">🌈 All Three!</button>
+      </div>
+    </div>
+    <div class="build-step">
+      <p class="build-step-label">Step 03 — Set Your Spice</p>
+      <div class="spice-slider-container">
+        <input type="range" min="1" max="5" value="2" class="spice-slider" id="spiceSlider">
+        <p class="spice-display" id="spiceDisplay">Mild 🌿</p>
+      </div>
+    </div>
+    <div class="plate-preview">
+      <span class="plate-preview-label">✦ Your Custom Plate ✦</span>
+      <div class="plate-display" id="plateDisplay">
+        <span class="plate-icon">🍽️</span>
+        <span id="plateText" style="font-style:italic;color:var(--text-muted)">Make your selections above...</span>
+      </div>
+      <a id="plateWA" href="#" class="btn-primary" style="opacity:0.3;pointer-events:none;transition:opacity 0.3s">
+        Order This Plate on WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- REVIEWS -->
+<section id="reviews" class="reviews-section">
+  <div class="reviews-header reveal">
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond"></div>
+      <div class="ornament-line r"></div>
+    </div>
+    <span class="section-label">What Jhansi Says</span>
+    <h2 class="section-heading">Voices of <em>Our Guests</em></h2>
+  </div>
+  <div class="reviews-grid" id="reviewsGrid">
+    <!-- injected by JS -->
+  </div>
+  <div style="text-align:center;margin-top:50px" class="reveal">
+    <div class="google-badge">
+      <span class="google-dot"></span>
+      Verified Google Reviews — 4.9 ★
+    </div>
+    <p style="font-size:0.8rem;color:var(--text-muted);margin-top:8px">Based on 200+ customer reviews</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">Narayan <span>Chat</span> Bhandar</a>
+      <p class="footer-tagline">"Where every plate is a love letter to the streets of Jhansi."</p>
+      <div class="footer-social">
+        <a href="#" class="social-btn">📘</a>
+        <a href="#" class="social-btn">📸</a>
+        <a href="#" class="social-btn">▶️</a>
+        <a href="https://wa.me/919999999999" class="social-btn">💬</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#menu">Our Menu</a></li>
+        <li><a href="#story">Our Story</a></li>
+        <li><a href="#build">Build Plate</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Popular Items</h4>
+      <ul>
+        <li><a href="#">Moong Dal Chilla</a></li>
+        <li><a href="#">Papdi Chaat</a></li>
+        <li><a href="#">Dahi Vada</a></li>
+        <li><a href="#">Golgappa</a></li>
+        <li><a href="#">Aloo Tikki</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Visit Us</h4>
+      <ul>
+        <li><a href="#">📍 Near Old Market, Jhansi, UP</a></li>
+        <li><a href="#">🕐 Open Daily: 10 AM – 10 PM</a></li>
+        <li><a href="#">📞 +91 99999 99999</a></li>
+        <li><a href="#">💬 WhatsApp Orders</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2024 Narayan Chat Bhandar. Crafted with <span class="footer-heart">❤</span> in Jhansi.</p>
+    <p class="footer-copy">The flavour of a thousand memories.</p>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<div class="whatsapp-float">
+  <span class="whatsapp-tooltip">🍽️ Order on WhatsApp</span>
+  <a href="https://wa.me/919999999999?text=Hi%20Narayan%20Chat%20Bhandar!%20I%20want%20to%20place%20an%20order%20🙏" target="_blank" class="whatsapp-btn">💬</a>
+</div>
+
+<script>
+// ——— CURSOR ———
+const cursor = document.getElementById('cursor');
+const trail = document.getElementById('cursorTrail');
+let mx = 0, my = 0, tx = 0, ty = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
+});
+function animTrail() {
+  tx += (mx - tx) * 0.12;
+  ty += (my - ty) * 0.12;
+  trail.style.transform = `translate(${tx - 18}px, ${ty - 18}px)`;
+  requestAnimationFrame(animTrail);
+}
+animTrail();
+
+// ——— PARTICLES ———
+(function() {
+  const container = document.getElementById('particles-container');
+  const colors = ['#E8751A','#D4A017','#F4A460','#C4531A','#FF9B3A'];
+  for (let i = 0; i < 24; i++) {
+    const p = document.createElement('div');
+    p.className = 'spice-particle';
+    const size = Math.random() * 6 + 2;
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${8 + Math.random()*12}s;
+      animation-delay:${Math.random()*10}s;
+    `;
+    container.appendChild(p);
+  }
+})();
+
+// ——— REVEAL ON SCROLL ———
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ——— ANIMATED COUNTERS ———
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = +el.dataset.target;
+    const isDecimal = el.dataset.decimal === 'true';
+    const duration = 1800;
+    const start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = isDecimal ? (ease * target).toFixed(0) : Math.floor(ease * target).toLocaleString();
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = isDecimal ? target : target.toLocaleString();
+    }
+    requestAnimationFrame(step);
+    counterObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-num[data-target]').forEach(el => counterObs.observe(el));
+
+// ——— MENU DATA ———
+const menuItems = [
+  { name:'Moong Dal Chilla', emoji:'🫓', price:'₹40', spice:3, category:'chilla', badge:'Fan Fav',
+    desc:'Crispy lentil crepes made from ground moong dal, served piping hot with freshly ground chutneys. Light, nutritious and absolutely addictive.' },
+  { name:'Papdi Chaat', emoji:'🥗', price:'₹35', spice:2, category:'chaat', badge:'Best Seller',
+    desc:'Crunchy wheat crisps layered with spiced potato, yogurt, tamarind & mint chutney, topped with sev and pomegranate. Pure magic in every bite.' },
+  { name:'Dahi Vada', emoji:'🥣', price:'₹30', spice:1, category:'chaat', badge:null,
+    desc:'Soft lentil dumplings soaked in chilled creamy yogurt, drizzled with sweet & tangy chutneys. A refreshingly cool classic.' },
+  { name:'Aloo Tikki', emoji:'🥔', price:'₹25', spice:2, category:'special', badge:null,
+    desc:'Golden-fried spiced potato patties, crisp on the outside, soft within. Served with our legendary green and tamarind chutney.' },
+  { name:'Golgappa', emoji:'🫧', price:'₹30', spice:4, category:'chaat', badge:null,
+    desc:'Crispy hollow puris filled with spiced water, chickpeas and potato. The ultimate street food thrill — one bite and you\'re hooked forever.' },
+  { name:'Bhel Puri', emoji:'🍱', price:'₹30', spice:2, category:'chaat', badge:null,
+    desc:'A delightful mix of puffed rice, sev, diced onions, tomatoes and chutneys. Tossed fresh to order for maximum crunch and flavour.' },
+  { name:'Raj Kachori', emoji:'🏆', price:'₹60', spice:3, category:'special', badge:'Chef\'s Pride',
+    desc:'A grand feast in one bowl — a giant crispy kachori stuffed with dal, potato, chickpeas, yogurt, chutneys and a shower of toppings.' },
+  { name:'Samosa Chaat', emoji:'🔺', price:'₹40', spice:3, category:'chaat', badge:null,
+    desc:'Freshly fried samosas crushed and topped with yogurt, chutneys, onions and sev. Where two classics become one unforgettable dish.' },
+  { name:'Masala Lassi', emoji:'🥛', price:'₹45', spice:0, category:'special', badge:'Must Try',
+    desc:'Thick, chilled yogurt-based drink with a hint of cumin, black salt and rose. The perfect companion to spicy chaat.' },
+];
+
+function buildMenuCards(filter = 'all') {
+  const grid = document.getElementById('menuGrid');
+  grid.innerHTML = '';
+  const items = filter === 'all' ? menuItems : menuItems.filter(i => i.category === filter);
+  items.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'menu-card reveal' + (idx < 3 ? ` reveal-delay-${idx}` : '');
+    const spiceChilis = [1,2,3,4,5].map(n => `<span class="chili ${n <= item.spice ? '' : 'inactive'}">🌶</span>`).join('');
+    card.innerHTML = `
+      <div class="menu-card-img">
+        <div class="menu-card-glow"></div>
+        <span class="menu-emoji">${item.emoji}</span>
+        ${item.badge ? `<span class="menu-badge">${item.badge}</span>` : ''}
+      </div>
+      <div class="menu-card-body">
+        <h3 class="menu-card-name">${item.name}</h3>
+        <p class="menu-card-desc">${item.desc.substring(0,80)}...</p>
+        <div class="menu-spice">
+          <span class="spice-label">Spice</span>
+          ${spiceChilis}
+        </div>
+        <div class="menu-footer">
+          <span class="menu-price">${item.price}</span>
+          <button class="menu-order-btn">View Details</button>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', () => openModal(item));
+    grid.appendChild(card);
+  });
+  // re-observe new reveal elements
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el => observer.observe(el));
+}
+buildMenuCards();
+
+// filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    buildMenuCards(this.dataset.filter);
+  });
+});
+
+// ——— MODAL ———
+function openModal(item) {
+  document.getElementById('modalEmoji').textContent = item.emoji;
+  document.getElementById('modalName').textContent = item.name;
+  document.getElementById('modalDesc').textContent = item.desc;
+  document.getElementById('modalPrice').textContent = item.price;
+  const spiceHTML = [1,2,3,4,5].map(n =>
+    `<div class="spice-dot ${n <= item.spice ? 'lit' : ''}"></div>`
+  ).join('');
+  document.getElementById('modalSpice').innerHTML = spiceHTML;
+  const waMsg = encodeURIComponent(`Hi! I'd like to order ${item.name} (${item.price}) from Narayan Chat Bhandar 🙏`);
+  document.getElementById('modalWA').href = `https://wa.me/919999999999?text=${waMsg}`;
+  document.getElementById('menuModal').classList.add('active');
+}
+document.getElementById('modalClose').addEventListener('click', () => {
+  document.getElementById('menuModal').classList.remove('active');
+});
+document.getElementById('menuModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('menuModal'))
+    document.getElementById('menuModal').classList.remove('active');
+});
+document.getElementById('modalBuild').addEventListener('click', () => {
+  document.getElementById('menuModal').classList.remove('active');
+  document.getElementById('build').scrollIntoView({ behavior: 'smooth' });
+});
+
+// ——— BUILD YOUR PLATE ———
+let plateBase = '', plateChutney = '', plateSpice = 'Mild 🌿';
+const spiceLevels = ['','Mild 🌿','Medium 🌶','Spicy 🔥','Extra Hot 🌋','Volcano ☠️'];
+
+function setupOptions(containerId, callback) {
+  document.querySelectorAll(`#${containerId} .build-option`).forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll(`#${containerId} .build-option`).forEach(b => b.classList.remove('selected'));
+      this.classList.add('selected');
+      callback(this.dataset.val);
+    });
+  });
+}
+setupOptions('baseOptions', v => { plateBase = v; updatePlate(); });
+setupOptions('chutneyOptions', v => { plateChutney = v; updatePlate(); });
+
+document.getElementById('spiceSlider').addEventListener('input', function() {
+  plateSpice = spiceLevels[+this.value];
+  document.getElementById('spiceDisplay').textContent = plateSpice;
+  updatePlate();
+});
+
+function updatePlate() {
+  const plateText = document.getElementById('plateText');
+  const plateWA = document.getElementById('plateWA');
+  if (plateBase && plateChutney) {
+    plateText.style.color = 'var(--cream)';
+    plateText.style.fontStyle = 'normal';
+    plateText.innerHTML = `<strong>${plateBase}</strong> + ${plateChutney} — ${plateSpice}`;
+    plateWA.style.opacity = '1';
+    plateWA.style.pointerEvents = 'all';
+    const msg = encodeURIComponent(`Hi Narayan Chat Bhandar! 🙏\n\nI'd like to order:\n🍽 Base: ${plateBase}\n🥣 Chutney: ${plateChutney}\n🌶 Spice: ${plateSpice}\n\nPlease confirm my order!`);
+    plateWA.href = `https://wa.me/919999999999?text=${msg}`;
+  } else {
+    plateText.style.color = 'var(--text-muted)';
+    plateText.style.fontStyle = 'italic';
+    plateText.textContent = !plateBase ? 'Select a base first...' : 'Now pick your chutney...';
+  }
+}
+
+// ——— REVIEWS ———
+const reviews = [
+  { name:'Priya Sharma', location:'Jhansi Local', rating:5, avatar:'P',
+    text:'Narayan Chat Bhandar is not just food — it\'s an emotion. Been coming here since childhood. The Papdi Chaat here is unlike anything I\'ve had anywhere in UP. Absolute legend.' },
+  { name:'Rohit Agrawal', location:'Visiting from Delhi', rating:5, avatar:'R',
+    text:'Came here on a friend\'s recommendation and honestly — I was blown away. The Moong Dal Chilla was crispy, the chutney was divine. Already planning my next visit to Jhansi!' },
+  { name:'Sunita Verma', location:'Jhansi', rating:5, avatar:'S',
+    text:'My family has been eating here for 20 years. The quality and taste have never changed. That consistency is rare and precious. Narayan ji\'s legacy lives on beautifully.' },
+  { name:'Amit Tiwari', location:'Kanpur', rating:5, avatar:'A',
+    text:'The Raj Kachori here deserves a Michelin star, I\'m not joking. The flavour layers, the freshness, the generosity of the portions — all exceptional. Jhansi\'s crown jewel.' },
+  { name:'Kavya Singh', location:'Jhansi University Student', rating:5, avatar:'K',
+    text:'After every exam, we come here to celebrate. It\'s become a ritual. The Golgappe here hit different — that water! Something magical in that recipe.' },
+  { name:'Deepak Mishra', location:'Orchha Day Trip', rating:4, avatar:'D',
+    text:'Stopped here while visiting Orchha fort nearby. The entire chaat spread was incredible. The owners are warm, welcoming and genuinely passionate about their craft.' },
+];
+const grid = document.getElementById('reviewsGrid');
+reviews.forEach((r, i) => {
+  const card = document.createElement('div');
+  card.className = `review-card reveal reveal-delay-${i % 3}`;
+  const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+  card.innerHTML = `
+    <div class="google-badge"><span class="google-dot"></span> Google Review</div>
+    <div class="review-stars">${stars}</div>
+    <p class="review-text">${r.text}</p>
+    <div class="reviewer">
+      <div class="reviewer-avatar">${r.avatar}</div>
+      <div>
+        <span class="reviewer-name">${r.name}</span>
+        <span class="reviewer-meta">📍 ${r.location}</span>
+      </div>
+    </div>
+  `;
+  grid.appendChild(card);
+  observer.observe(card);
+});
+</script>
+</body>
+</html>
